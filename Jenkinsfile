@@ -6,19 +6,19 @@ pipeline {
     stages {
         stage("build") {
             steps {
-                echo 'building...'
+                echo 'building it...'
             }
         }
 
         stage("test") {
             steps {
-                echo 'testing...'
+                echo 'testing it...'
             }
         }
 
         stage("deploy") {
             steps {
-                echo 'deploying...'
+                echo 'deploying it...'
             }
         }
     }
