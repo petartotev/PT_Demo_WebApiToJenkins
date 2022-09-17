@@ -1,9 +1,6 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.Json.Nodes;
 using WebApiToJenkins.Api.Models;
 
 namespace WebApiToJenkins.Tests.IntegrationTests.Calculator;
