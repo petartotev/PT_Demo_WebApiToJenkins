@@ -2,6 +2,6 @@
 {
     public class ObjectCalculatedResponse
     {
-        public int ResultingValue { get; set; }
+        public int Result { get; set; }
     }
 }

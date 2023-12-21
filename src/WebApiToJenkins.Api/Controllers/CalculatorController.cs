@@ -7,18 +7,12 @@ namespace WebApiToJenkins.Api.Controllers;
 [Route("api/[controller]")]
 public class CalculatorController : ControllerBase
 {
-    [HttpGet("multiplybytwo/{id:int}")]
-    public IActionResult GetNumberMultipliedByTwo(int id)
+    [HttpGet("multiplybytwo/{num:int}")]
+    public IActionResult GetNumberMultipliedByTwo(int num)
     {
-        if (id == 0)
-        {
-            return BadRequest();
-        }
+        if (num == 0) return BadRequest();
 
-        var result = new ObjectCalculatedResponse
-        {
-            ResultingValue = id * 2
-        };
+        var result = new ObjectCalculatedResponse { Result = num * 2 };
 
         return Ok(result);
     }
