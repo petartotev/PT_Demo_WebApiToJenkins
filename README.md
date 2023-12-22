@@ -1,12 +1,18 @@
 # PT_Demo_WebApiToJenkins
 
 ## Contents
-- [.NET Solution](#net-solution)
+- [Setup .NET Solution](#setup-net-solution)
     - [WebApiToJenkins.Api](#webapitojenkinsapi)
     - [WebApiToJenkins.Tests](#webapitojenkinstests)
-- [Setup](#setup)
+    - [Jenkinsfile](#jenkinsfile)
+- [Setup Jenkins using Docker](#setup-jenkins-using-docker)
+- [Setup Jenkins Job using Jenkinsfile and GitHub](#setup-jenkins-job-using-jenkinsfile-and-github)
+- [Links](#links)
 
-## .NET Solution
+## Setup .NET Solution
+
+❗ Note that it is essential for the .NET Solution to be a part of a public GitHub repository:
+<br>https://github.com/petartotev/PT_Demo_WebApiToJenkins
 
 The WebApiToJenkins solution contains 2 projects:
 - WebApiToJenkins.Api
@@ -14,25 +20,71 @@ The WebApiToJenkins solution contains 2 projects:
 
 ### WebApiToJenkins.Api
 
+Create a .NET6 Web API project containing a single CalculatorController.cs with the following endpoint:
+
+```
+[GET] https://localhost:7000/api/calculator/multiplybytwo/{your-num-here}
+```
+
+Run the application and test it by using 5 for {your-num-here}.
+<br>Here is the expected response:
+
+```
+{"result":10}
+```
+
 ### WebApiToJenkins.Tests
 
-## Setup
-
-1. Create Dockerfile:
+Implement a series of NUnit integration tests implementing the abstract class `BaseTests` with the following Property to be called by tests:
 
 ```
+Client = new WebApplicationFactory<Program>().CreateClient()
 ```
 
-2. Pull Docker Image:
+### Jenkinsfile
+
+In the parent directory of the repository, create `Jenkinsfile` with the following content:
+
+```
+#!Groovy
+
+pipeline {
+    agent any
+
+    stages {
+        stage("build") {
+            steps {
+                echo 'Building it...'
+            }
+        }
+
+        stage("test") {
+            steps {
+                echo 'Testing it...'
+            }
+        }
+
+        stage("deploy") {
+            steps {
+                echo 'Deploying it...'
+            }
+        }
+    }
+}
+```
+
+## Setup Jenkins using Docker
+
+1. Pull latest Docker Image:
 
 ```
 docker pull jenkins/jenkins
 ```
 
-3. Run Docker Container:
+2. Run Jenkins in a `jenkins_master` Docker Container:
 
 ```
-docker run -p 8080:8080 -p 50000:50000 -d -v jenkins_home:/var/jenkins_home --name jenkins_master jenkins/jenkins:lts
+docker run -p 8080:8080 -p 50000:50000 -d -v jenkins_home:/var/jenkins_home --name jenkins_master jenkins/jenkins:latest
 ```
 
 Output:
@@ -40,7 +92,7 @@ Output:
 c2b809a66792e713c224694e56a34dc5cbec3d401298173c80961eae48456494
 ```
 
-4. Get logs of container and extract password:
+3. Get logs of `jenkins_master` Docker Container and extract the `Administrator password`:
 ```
 docker logs c2b809a66792e713c224694e56a34dc5cbec3d401298173c80961eae48456494
 ```
@@ -92,7 +144,61 @@ This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
 2023-12-21 21:12:09.312+0000 [id=69]    INFO    hudson.util.Retrier#start: Performed the action check updates server successfully at the attempt #1
 ```
 
-5. Go to localhost:8080 and:
-- Login with Administrator password from step 4
-- Install Suggested Plugins
-- Set URL, [Save and Finish] and [Start using Jenkins]
+⚠️ If you previously pulled the Jenkins Image and run a Jenkins container using the command from step 2, you can find yourself in a situation in which the `docker logs` command output doesn't contain the `Administrator password`.
+
+💡 You can delete the running Container and strart from scratch, replacing `-v jenkins_home:/var/jenkins_home` with `-v jenkins:/var/jenkins_home` in the `docker run` command, then executing it.
+<br>The fix was taken from this [Stack Overflow article](https://stackoverflow.com/questions/56657041/jenkins-doesnt-show-me-initial-admin-password-at-second-build). 
+
+4. Access Jenkins on [localhost:8080](http://localhost:8080/), then:
+- Login:
+    - user: admin
+    - password: `Administrator password` from step 3
+- Customize Jenkins > Choose [Install suggested plugins] and wait for the installation to finish
+- Create First Admin User >
+    - Username: your-username-here
+    - Password: your-password-here
+    - Confirm Password: your-password-here
+    - Full name: your-full-name-here
+    - E-mail address: your-email-here
+    - [Save and Continue]
+- Instance Configuration >
+    - Jenkins URL: http://localhost:8080/
+    - [Save and Finish]
+- Jenkins is ready!
+    - [Start using Jenkins]
+
+## Setup Jenkins Job using Jenkinsfile and GitHub
+
+0. Make sure you have Jenkinsfile in the parent directory of the repository (where .git is located).
+
+1. In Jenkins home page:
+- Choose [Create a job]
+- Enter an item name: pt-multibranch-pipeline
+- Choose [Multibranch Pipeline] (*Creates a set of Pipeline projects according to detected branches in one SCM repository*) and hit [OK]
+- In [General]:
+    - Display name: PT Multibranch Pipeline
+    - Description: PT Multibranch Pipeline
+    - Branch sources: GitHub
+    - Credentials: none (if public repo)
+    - Repository HTTPS URL: https://github.com/petartotev/PT_Demo_WebApiToJenkins
+    - [Validate] in order to validate credentials and repo
+    - Behaviours: leave as default (for now)
+    - Build Configuration:
+        - Mode: by Jenkinsfile
+        - Script path: Jenkinsfile
+    - Scan Multibranch Pipeline Triggers: 
+        - [✓] Periodically if not otherwise run
+        - Interval: 5 minutes?
+    - [Apply], then [Save]
+    - Go to Dashboard > PT Multibranch Pipeline > Open the `main` job
+
+    ![jenkins-ui-15](./res/15.jpg)
+
+    - Check if you have an initial build triggered:
+    
+    ![jenkins-ui-16](./res/16.jpg)
+
+2. Commit and push a change to the main branch and check if a new build in Jenkins will be triggered automatically.
+
+## Links
+- https://stackoverflow.com/questions/56657041/jenkins-doesnt-show-me-initial-admin-password-at-second-build
