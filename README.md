@@ -7,6 +7,7 @@
     - [Jenkinsfile](#jenkinsfile)
 - [Setup Jenkins using Docker](#setup-jenkins-using-docker)
 - [Setup Jenkins Job using Jenkinsfile and GitHub](#setup-jenkins-job-using-jenkinsfile-and-github)
+- [Update Jenkinsfile to Test Run](#update-jenkinsfile-to-test-run)
 - [Links](#links)
 
 ## Setup .NET Solution
@@ -144,9 +145,9 @@ This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
 2023-12-21 21:12:09.312+0000 [id=69]    INFO    hudson.util.Retrier#start: Performed the action check updates server successfully at the attempt #1
 ```
 
-⚠️ If you previously pulled the Jenkins Image and run a Jenkins container using the command from step 2, you can find yourself in a situation in which the `docker logs` command output doesn't contain the `Administrator password`.
+⚠️ If you previously pulled the Jenkins Image and run a Jenkins container using the command from step 2, you can find yourself in a situation in which the `docker logs` command output doesn't contain the `Administrator password` *(even after you deleted both the jenkins/jenkins Container and Image and started from scratch)*.
 
-💡 You can delete the running Container and strart from scratch, replacing `-v jenkins_home:/var/jenkins_home` with `-v jenkins:/var/jenkins_home` (or any other new, unique name) in the `docker run` command, then executing it.
+💡 You need to delete the running Container and start from scratch, replacing `-v jenkins_home:/var/jenkins_home` with `-v jenkins:/var/jenkins_home` (or any other new, unique name) in the `docker run` command, then executing it.
 <br>The fix was taken from this [Stack Overflow article](https://stackoverflow.com/questions/56657041/jenkins-doesnt-show-me-initial-admin-password-at-second-build). 
 
 4. Access Jenkins on [localhost:8080](http://localhost:8080/):
@@ -204,6 +205,8 @@ This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
 3. Commit and push a change to the main branch and check if a new build in Jenkins will be triggered automatically:
 
 ![jenkins-ui-17](./res/17.jpg)
+
+## Update Jenkinsfile to Test Run
 
 ## Links
 - https://stackoverflow.com/questions/56657041/jenkins-doesnt-show-me-initial-admin-password-at-second-build
