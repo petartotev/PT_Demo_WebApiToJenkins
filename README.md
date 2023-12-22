@@ -146,10 +146,10 @@ This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
 
 ⚠️ If you previously pulled the Jenkins Image and run a Jenkins container using the command from step 2, you can find yourself in a situation in which the `docker logs` command output doesn't contain the `Administrator password`.
 
-💡 You can delete the running Container and strart from scratch, replacing `-v jenkins_home:/var/jenkins_home` with `-v jenkins:/var/jenkins_home` in the `docker run` command, then executing it.
+💡 You can delete the running Container and strart from scratch, replacing `-v jenkins_home:/var/jenkins_home` with `-v jenkins:/var/jenkins_home` (or any other new, unique name) in the `docker run` command, then executing it.
 <br>The fix was taken from this [Stack Overflow article](https://stackoverflow.com/questions/56657041/jenkins-doesnt-show-me-initial-admin-password-at-second-build). 
 
-4. Access Jenkins on [localhost:8080](http://localhost:8080/), then:
+4. Access Jenkins on [localhost:8080](http://localhost:8080/):
 - Login:
     - user: admin
     - password: `Administrator password` from step 3
@@ -171,8 +171,8 @@ This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
 
 0. Make sure you have Jenkinsfile in the parent directory of the repository (where .git is located).
 
-1. In Jenkins home page:
-- Choose [Create a job]
+1. Create a new Job in Jenkins UI:
+- In Jenkins Home Page, choose [Create a job]
 - Enter an item name: pt-multibranch-pipeline
 - Choose [Multibranch Pipeline] (*Creates a set of Pipeline projects according to detected branches in one SCM repository*) and hit [OK]
 - In [General]:
@@ -190,15 +190,20 @@ This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
         - [✓] Periodically if not otherwise run
         - Interval: 5 minutes?
     - [Apply], then [Save]
-    - Go to Dashboard > PT Multibranch Pipeline > Open the `main` job
 
-    ![jenkins-ui-15](./res/15.jpg)
+2. Open the newly created `main`Job:
 
-    - Check if you have an initial build triggered:
-    
-    ![jenkins-ui-16](./res/16.jpg)
+- Go to Dashboard > PT Multibranch Pipeline > Open the `main` job
 
-2. Commit and push a change to the main branch and check if a new build in Jenkins will be triggered automatically.
+![jenkins-ui-15](./res/15.jpg)
+
+- Check if you have an initial build triggered:
+
+![jenkins-ui-16](./res/16.jpg)
+
+3. Commit and push a change to the main branch and check if a new build in Jenkins will be triggered automatically:
+
+![jenkins-ui-17](./res/17.jpg)
 
 ## Links
 - https://stackoverflow.com/questions/56657041/jenkins-doesnt-show-me-initial-admin-password-at-second-build
