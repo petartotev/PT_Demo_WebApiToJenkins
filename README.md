@@ -14,6 +14,8 @@
     - [Setup Job using Jenkinsfile and GitHub (Windows)](#setup-job-using-jenkinsfile-and-github-windows)
     - [Update Jenkinsfile to Test Run (Windows)](#update-jenkinsfile-to-test-run-windows)
 - [Links](#links)
+    - [Jenkins Installation (Bare-Metal)](#jenkins-installation-bare-metal)
+    - [Others](#others)
 
 ## Setup .NET Solution
 
@@ -269,10 +271,6 @@ pipeline {
 
 The only thing that worked is installing Jenkins locally in order for it to be able to use the dotnet CLI freely.
 
-
-
-
-
 ## Setup Jenkins in Windows
 
 ### Initial Setup (Windows)
@@ -336,6 +334,8 @@ pipeline {
 }
 ```
 
+⚠️ Needed to replace 'sh' with 'bat' due to [error: "cannot run program nohup" on windows](https://stackoverflow.com/questions/45140614/jenkins-pipeline-sh-fail-with-cannot-run-program-nohup-on-windows).
+
 4. Git add, git commit, git push and check if a successful build that executed the NUnit tests was triggered:
 
 ```
@@ -346,6 +346,23 @@ git push
 
 ![jenkins-20](./res/20.jpg)
 
+5. Next, you can break a test, commit and push to see an automatic build failing:
+
+![jenkins-21](./res/21.jpg)
+
 ## Links
+
+### Jenkins Installation (Bare-Metal)
+- https://www.jenkins.io/doc/book/installing/windows/
+- https://www.jenkins.io/download/#downloading-jenkins
+- https://www.oracle.com/java/technologies/downloads/#jdk21-windows
+
+### Others
 - https://stackoverflow.com/questions/56657041/jenkins-doesnt-show-me-initial-admin-password-at-second-build
 - https://stackoverflow.com/questions/62253474/jenkins-invalid-agent-type-docker-specified-must-be-one-of-any-label-none
+- https://stackoverflow.com/questions/44791060/run-jenkins-pipeline-agent-with-sudo
+- https://stackoverflow.com/questions/44850565/docker-not-found-when-building-docker-image-using-docker-jenkins-container-pipel
+- https://www.jenkins.io/doc/book/pipeline/docker/#specifying-a-docker-label
+- https://forums.docker.com/t/docker-not-found-in-jenkins-pipeline/31683
+- https://medium.com/agilix/continuous-integration-diy-series-4-4-12ddaa815e90
+- https://stackoverflow.com/questions/45140614/jenkins-pipeline-sh-fail-with-cannot-run-program-nohup-on-windows
