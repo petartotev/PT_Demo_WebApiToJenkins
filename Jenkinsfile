@@ -9,11 +9,11 @@ pipeline {
                 echo 'Building it...'
                 // Install the .NET SDK
                 sh 'curl -LO https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb'
-                sh 'sudo dpkg -i packages-microsoft-prod.deb'
-                sh 'sudo apt-get update'
-                sh 'sudo apt-get install -y apt-transport-https'
-                sh 'sudo apt-get update'
-                sh 'sudo apt-get install -y dotnet-sdk-6.0'
+                sh 'dpkg -i packages-microsoft-prod.deb'
+                sh 'apt-get update'
+                sh 'apt-get install -y apt-transport-https'
+                sh 'apt-get update'
+                sh 'apt-get install -y dotnet-sdk-6.0'
             }
         }
 
