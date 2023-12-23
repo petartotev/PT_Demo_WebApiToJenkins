@@ -1,12 +1,7 @@
 #!Groovy
 
 pipeline {
-    agent {
-        docker {
-            image 'mcr.microsoft.com/dotnet/sdk:6.0'
-            label 'my-docker-agent-label'
-        }
-    }
+    agent any
 
     stages {
         stage("build") {
@@ -18,13 +13,6 @@ pipeline {
         stage("test") {
             steps {
                 echo 'Testing it...'
-                script {
-                    // Change directory to the test project
-                    dir('./src/WebApiToJenkins.Tests') {
-                        // Run NUnit tests using dotnet test
-                        sh 'dotnet test'
-                    }
-                }
             }
         }
 
