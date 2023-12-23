@@ -1,22 +1,9 @@
 #!Groovy
 
 pipeline {
-    agent {
-        docker {
-            image 'mcr.microsoft.com/dotnet/sdk:6.0'
-        }
-    }
+    agent any
 
     stages {
-        stage('Initialize') {
-            steps {
-                script {
-                    def dockerHome = tool 'myDocker'
-                    echo "Docker Home: ${dockerHome}"
-                }
-            }
-        }
-
         stage("build") {
             steps {
                 echo 'Building it...'
