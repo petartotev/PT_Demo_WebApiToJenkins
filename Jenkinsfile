@@ -17,7 +17,7 @@ pipeline {
                     // Change directory to the test project
                     dir('./src/WebApiToJenkins.Tests') {
                         // Run NUnit tests using dotnet test
-                        sh 'dotnet test'
+                        bat 'dotnet test'
                     }
                 }
             }
