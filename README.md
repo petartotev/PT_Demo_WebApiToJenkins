@@ -208,5 +208,7 @@ This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
 
 ## Update Jenkinsfile to Test Run
 
+You have to install 2 plugins: Docker plugin and Docker Pipeline.
+
 ## Links
 - https://stackoverflow.com/questions/56657041/jenkins-doesnt-show-me-initial-admin-password-at-second-build
