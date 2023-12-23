@@ -44,7 +44,7 @@ Client = new WebApplicationFactory<Program>().CreateClient()
 
 ### Jenkinsfile
 
-In the parent directory of the repository, create `Jenkinsfile` with the following content:
+In the parent directory of the repository, create a simplified `Jenkinsfile` with the following content:
 
 ```
 #!Groovy

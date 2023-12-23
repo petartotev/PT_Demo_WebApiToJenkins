@@ -13,6 +13,13 @@ pipeline {
         stage("test") {
             steps {
                 echo 'Testing it...'
+                script {
+                    // Change directory to the test project
+                    dir('./src/WebApiToJenkins.Tests') {
+                        // Run NUnit tests using dotnet test
+                        sh 'dotnet test'
+                    }
+                }
             }
         }
 
