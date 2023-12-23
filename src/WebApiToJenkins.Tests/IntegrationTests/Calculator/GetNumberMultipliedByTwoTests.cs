@@ -17,7 +17,7 @@ public class GetNumberMultipliedByTwoTests : BaseTests
 
         // Assert
         IsSuccess(response);
-        result.Result.Should().Be(10);
+        result.Result.Should().Be(11);
     }
 
     [Test]

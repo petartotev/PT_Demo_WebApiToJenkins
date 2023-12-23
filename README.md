@@ -5,9 +5,14 @@
     - [WebApiToJenkins.Api](#webapitojenkinsapi)
     - [WebApiToJenkins.Tests](#webapitojenkinstests)
     - [Jenkinsfile](#jenkinsfile)
-- [Setup Jenkins using Docker](#setup-jenkins-using-docker)
-- [Setup Jenkins Job using Jenkinsfile and GitHub](#setup-jenkins-job-using-jenkinsfile-and-github)
-- [Update Jenkinsfile to Test Run](#update-jenkinsfile-to-test-run)
+- [Setup Jenkins in Docker](#setup-jenkins-in-docker)
+    - [Initial Setup (Docker)](#initial-setup-docker)
+    - [Setup Job using Jenkinsfile and GitHub (Docker)](#setup-job-using-jenkinsfile-and-github-docker)
+    - [Update Jenkinsfile to Test Run (Docker)](#update-jenkinsfile-to-test-run-docker)
+- [Setup Jenkins in Windows](#setup-jenkins-in-windows)
+    - [Initial Setup (Windows)](#initial-setup-windows)
+    - [Setup Job using Jenkinsfile and GitHub (Windows)](#setup-job-using-jenkinsfile-and-github-windows)
+    - [Update Jenkinsfile to Test Run (Windows)](#update-jenkinsfile-to-test-run-windows)
 - [Links](#links)
 
 ## Setup .NET Solution
@@ -74,7 +79,9 @@ pipeline {
 }
 ```
 
-## Setup Jenkins using Docker
+## Setup Jenkins in Docker
+
+### Initial Setup (Docker)
 
 1. Pull latest Docker Image:
 
@@ -168,7 +175,7 @@ This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
 - Jenkins is ready!
     - [Start using Jenkins]
 
-## Setup Jenkins Job using Jenkinsfile and GitHub
+### Setup Job using Jenkinsfile and GitHub (Docker)
 
 0. Make sure you have Jenkinsfile in the parent directory of the repository (where .git is located).
 
@@ -206,9 +213,138 @@ This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
 
 ![jenkins-ui-17](./res/17.jpg)
 
-## Update Jenkinsfile to Test Run
+### Update Jenkinsfile to Test Run (Docker)
 
-You have to install 2 plugins: Docker plugin and Docker Pipeline.
+1. Edit the `Jenkinsfile` (broken!):
+
+```
+#!Groovy
+
+pipeline {
+    agent {
+        docker {
+            image 'mcr.microsoft.com/dotnet/sdk:6.0'
+        }
+    }
+
+    stages {
+        stage('Initialize') {
+            steps {
+                script {
+                    def dockerHome = tool 'myDocker'
+                    echo "Docker Home: ${dockerHome}"
+                }
+            }
+        }
+
+        stage("build") {
+            steps {
+                echo 'Building it...'
+            }
+        }
+
+        stage("test") {
+            steps {
+                echo 'Testing it...'
+                script {
+                    // Change directory to the test project
+                    dir('./src/WebApiToJenkins.Tests') {
+                        // Run NUnit tests using dotnet test
+                        sh 'dotnet test'
+                    }
+                }
+            }
+        }
+
+        stage("deploy") {
+            steps {
+                echo 'Deploying it...'
+            }
+        }
+    }
+}
+```
+
+⚠️⚠️⚠️ Unfortunately, a series of errors occurred due to the fact that the `dotnet test` could not be executed ("dotnet not found"). I tried to install it on the agent, defining an image, I tried executing a bunch of commands 
+
+The only thing that worked is installing Jenkins locally in order for it to be able to use the dotnet CLI freely.
+
+
+
+
+
+## Setup Jenkins in Windows
+
+### Initial Setup (Windows)
+
+0. Download and Install Java 21 from [here](https://www.oracle.com/java/technologies/downloads/#jdk21-windows).
+
+1. Download Jenkins LTS for Windows from [here](https://www.jenkins.io/download/#downloading-jenkins).
+
+2. Follow the instructions of [this page](https://www.jenkins.io/doc/book/installing/windows/) to get Jenkins installed (bare-metal).
+
+### Setup Job using Jenkinsfile and GitHub (Windows)
+
+This section should be identical to [Setup Job using Jenkinsfile and GitHub (Windows)](#setup-job-using-jenkinsfile-and-github-docker). 
+
+### Update Jenkinsfile to Test Run (Windows)
+
+0. Access [localhost:8080](http://localhost:8080/)
+
+1. Go to Dashboard > Manage Systems > Tools (Configure tools, their locations and automatic installers.) > find `Docker installations` and set it:
+
+![jenkins-18](./res/18.jpg)
+
+2. Go to Dashboard > Manage Systems > Plugins (Configure tools, their locations and automatic installers.) > Available plugins > find `Docker (Docker plugin)` and `Docker plugins` and install them:
+
+![jenkins-19](./res/19.jpg)
+
+3. Update `Jenkinsfile`:
+
+```
+#!Groovy
+
+pipeline {
+    agent any
+
+    stages {
+        stage("build") {
+            steps {
+                echo 'Building it...'
+            }
+        }
+
+        stage("test") {
+            steps {
+                echo 'Testing it...'
+                script {
+                    // Change directory to the test project
+                    dir('./src/WebApiToJenkins.Tests') {
+                        // Run NUnit tests using dotnet test
+                        bat 'dotnet test'
+                    }
+                }
+            }
+        }
+
+        stage("deploy") {
+            steps {
+                echo 'Deploying it...'
+            }
+        }
+    }
+}
+```
+
+4. Git add, git commit, git push and check if a successful build that executed the NUnit tests was triggered:
+
+```
+git add .
+git commit -m "Jenkinsfile updated"
+git push
+```
+
+![jenkins-20](./res/20.jpg)
 
 ## Links
 - https://stackoverflow.com/questions/56657041/jenkins-doesnt-show-me-initial-admin-password-at-second-build
