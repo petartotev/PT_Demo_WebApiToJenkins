@@ -8,7 +8,7 @@ pipeline {
             steps {
                 echo 'Building it...'
                 // Install the .NET SDK
-                sh 'wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb'
+                sh 'curl -LO https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb'
                 sh 'sudo dpkg -i packages-microsoft-prod.deb'
                 sh 'sudo apt-get update'
                 sh 'sudo apt-get install -y apt-transport-https'
