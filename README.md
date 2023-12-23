@@ -212,3 +212,4 @@ You have to install 2 plugins: Docker plugin and Docker Pipeline.
 
 ## Links
 - https://stackoverflow.com/questions/56657041/jenkins-doesnt-show-me-initial-admin-password-at-second-build
+- https://stackoverflow.com/questions/62253474/jenkins-invalid-agent-type-docker-specified-must-be-one-of-any-label-none
