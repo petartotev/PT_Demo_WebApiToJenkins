@@ -11,6 +11,8 @@ pipeline {
         stage("build") {
             steps {
                 echo 'Building it...'
+                def dockerHome = tool 'myDocker'
+                env.PATH = "${dockerHome}/bin:${env.PATH}"
             }
         }
 
